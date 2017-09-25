@@ -11,9 +11,6 @@ export default class PostQuestion extends React.Component {
             <p className="title">
               질문 올리기
             </p>
-            <p className="subtitle">
-              간단하면서 상세하게 두개의 보기를 입력합니다
-            </p>
             <div className="field is-horizontal">
               <div className="field-label is-large">
                 <p className="title">보기 1</p>

@@ -21,11 +21,8 @@ export default class SiteHeader extends React.Component {
           <div className="hero-body">
             <div className="container">
               <h1 className="title">
-                결정 내리시기 힘들죠?
+                결정 전문가에게 의뢰하세요
               </h1>
-              <h2 className="subtitle">
-                결정 Expert에게 의뢰하세요
-              </h2>
             </div>
           </div>
           <div className="hero-foot">
@@ -37,7 +34,7 @@ export default class SiteHeader extends React.Component {
                       <span className="icon">
                         <i className="fa fa-question-circle"></i>
                       </span>
-                      <span>나도 질문 올리기</span>
+                      <span>나도 질문</span>
                     </a>
                   </li>
                 </ul>
