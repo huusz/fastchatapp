@@ -2,8 +2,55 @@ import React from 'react'
 
 
 export default class PostQuestion extends React.Component {
-  render() {
+  constructor(props) {
+    super(props);
+    this.state = {
+      firstOption: '',
+      secondOption: '',
+      firstOptionImage: '',
+      secondOptionImage: '',
+    }
+  }
 
+  handleFirstOptionValueChange = (e) => {
+    this.setState({
+      firstOption: e.target.value,
+    })
+  }
+
+  handleSecondOptionValueChange = (e) => {
+    this.setState({
+      secondOption: e.target.value,
+    })
+  }
+
+  closeAndResetValue = () => {
+    this.setState({
+      firstOption: '',
+      secondOption: '',
+      firstOptionImage: '',
+      secondOptionImage: '',
+    })
+    this.props.onClose();
+  }
+
+  createPayloadAndPostToDB = () => {
+    if (!this.state.secondOption || !this.state.firstOption) {
+      return;
+    }
+    this.props.postQuestionToDB({
+      firstOption: this.state.firstOption,
+      secondOption: this.state.secondOption,
+      posted_by: {
+        name: this.props.currentUser.name,
+        email: this.props.currentUser.email,
+        photoUrl: this.props.currentUser.photoUrl,
+      }
+    })
+    this.closeAndResetValue();
+  }
+
+  render() {
     return (
       <div>
         <article className="tile is-child notification is-info">
@@ -18,7 +65,12 @@ export default class PostQuestion extends React.Component {
               <div className="field-body">
                 <div className="field">
                   <div className="control">
-                    <input className="input is-large" type="text" placeholder="간단한 문구 작성" />
+                    <input
+                      className="input is-large"
+                      type="text"
+                      placeholder="간단한 문구 작성"
+                      onChange={(e) => this.handleFirstOptionValueChange(e)}
+                    />
                   </div>
                 </div>
                 <div className="field">
@@ -45,7 +97,12 @@ export default class PostQuestion extends React.Component {
               <div className="field-body">
                 <div className="field">
                   <div className="control">
-                    <input className="input is-large" type="text" placeholder="간단한 문구 작성" />
+                    <input
+                      className="input is-large"
+                      type="text"
+                      placeholder="간단한 문구 작성"
+                      onChange={(e) => this.handleSecondOptionValueChange(e)}
+                    />
                   </div>
                 </div>
                 <div className="field">
@@ -71,8 +128,20 @@ export default class PostQuestion extends React.Component {
                 justifyContent: 'flex-end',
               }}
             >
-              <a className="button is-danger  is-large" style={{ marginRight: '5px' }}>취소</a>
-              <a className="button is-info  is-large">질문</a>
+              <a
+                className="button is-danger is-large"
+                style={{ marginRight: '5px' }}
+                onClick={this.closeAndResetValue}
+              >
+                취소
+              </a>
+              <a
+                className="button is-info is-large"
+                disabled={!this.state.firstOption || !this.state.secondOption}
+                onClick={this.createPayloadAndPostToDB}
+              >
+                질문
+              </a>
             </div>
           </div>
         </article>

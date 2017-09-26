@@ -6,6 +6,7 @@ import PostQuestion from './components/PostQuestion';
 import VoteScore from './components/VoteScore';
 import 'bulma/css/bulma.css';
 import 'font-awesome/css/font-awesome.css';
+import map from 'lodash/map';
 import {
   database,
   auth,
@@ -56,6 +57,12 @@ class App extends Component {
       currentUser: {},
     }
 
+    this.onQuestionChange = database.ref('/questions').on('value', (snapshot) => {
+      this.setState({
+        questions: map(snapshot.val(), question => question)
+      })
+    })
+
     this.onAuthChange = auth.onAuthStateChanged((user) => {
       if (user) {
         const currentUser = {};
@@ -87,13 +94,11 @@ class App extends Component {
 
   logout = () => auth.signOut()
 
-  componentDidMount = () => {
-    this.setState({
-      questions: mockData.questions,
-    })
-  }
-
   togglePostingMode = () => this.setState({ isPostMode: !this.state.isPostMode })
+
+  postQuestionToDB = (payload) => {
+    database.ref("/questions").push(payload);
+  }
 
   render() {
     return (
@@ -105,7 +110,11 @@ class App extends Component {
           logoutHandler={this.logout}
         />
         {this.state.isPostMode ? (
-          <PostQuestion />
+          <PostQuestion
+            postQuestionToDB={this.postQuestionToDB}
+            onClose={this.togglePostingMode}
+            currentUser={this.state.currentUser}
+          />
         ) : null}
         <div className="container">
           {this.state.questions.map((question) => {
@@ -126,8 +135,8 @@ class App extends Component {
                     email={question.posted_by.email}
                   />
                   <VoteScore
-                    firstOptionVoteList={question.firstOptionVoteList}
-                    secondOptionVoteList={question.secondOptionVoteList}
+                    firstOptionVoteList={question.firstOptionVoteList || []}
+                    secondOptionVoteList={question.secondOptionVoteList || []}
                   />
                 </div>
               </div>
