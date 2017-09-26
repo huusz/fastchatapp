@@ -9,10 +9,10 @@ import 'font-awesome/css/font-awesome.css';
 
 class App extends Component {
   state = {
-    isPosting: false,
+    isPostMode: false,
   }
 
-  togglePostingMode = () => this.setState({ isPosting: !this.state.isPosting })
+  togglePostingMode = () => this.setState({ isPostMode: !this.state.isPostMode })
 
   render() {
     return (
@@ -20,7 +20,7 @@ class App extends Component {
         <SiteHeader
           togglePostingMode={this.togglePostingMode}
         />
-        {this.state.isPosting ? (
+        {this.state.isPostMode ? (
           <PostQuestion />
         ) : null}
         <div className="container">
