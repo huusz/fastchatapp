@@ -40,7 +40,7 @@ export default class PostQuestion extends React.Component {
             </div>
             <div className="field is-horizontal">
               <div className="field-label is-large">
-                <p className="title">보기 1</p>
+                <p className="title">보기 2</p>
               </div>
               <div className="field-body">
                 <div className="field">

@@ -4,5 +4,5 @@ import App from './App';
 import ChatApp from './ChatApp';
 import registerServiceWorker from './registerServiceWorker';
 
-ReactDOM.render(<ChatApp />, document.getElementById('root'));
+ReactDOM.render(<App />, document.getElementById('root'));
 registerServiceWorker();
