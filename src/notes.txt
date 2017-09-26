@@ -1,0 +1,15 @@
+DBMS
+
+우리가 사용할 DB는 NOSQL
+하나의 커다란 Object
+
+root = {
+    messages: [
+        'message1',
+        'message2',
+    ],
+    users: [
+        'user1',
+        'user2',
+    ]
+}
