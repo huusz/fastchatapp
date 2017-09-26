@@ -1,5 +1,32 @@
 DBMS
 
+root = {
+    questions: [
+        {
+            option1: '자장면',
+            option2: '짬뽕',
+            option1_image: 'https://image.jpg',
+            option2_image: 'http://image2.jpg',
+            posted_by: {
+                name: '소용석',
+                email: 'ysoh611@gmail.com',
+                photoUrl: 'http://profile.jpg',
+            },
+            option1_vote: [
+                {
+                    name: '홍지수',
+                },
+                {
+                    name: '홍지',
+                },                
+            ],
+            option2_vote: [
+            ]
+        }
+
+    ]
+}
+
 우리가 사용할 DB는 NOSQL
 하나의 커다란 Object
 
@@ -13,3 +40,4 @@ root = {
         'user2',
     ]
 }
+
