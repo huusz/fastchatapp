@@ -12,7 +12,11 @@ export default class SiteHeader extends React.Component {
               <header className="nav">
                 <div className="container">
                   <div className="nav-left">
-                    <CurrentUser />
+                    <CurrentUser
+                      currentUser={this.props.currentUser}
+                      loginHandler={this.props.loginHandler}
+                      logoutHandler={this.props.logoutHandler}
+                    />
                   </div>
                 </div>
               </header>

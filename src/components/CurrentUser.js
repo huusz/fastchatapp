@@ -2,17 +2,14 @@ import React from 'react'
 
 
 export default class CurrentUser extends React.Component {
-  render() {
+  renderLoginMode = () => {
     return (
       <div className="nav-right nav-menu">
-        <a className="nav-item is-active">
-          로그인
-        </a>
         <figure
           className="image is-48x48"
         >
           <img
-            src="http://bulma.io/images/placeholders/128x128.png"
+            src={this.props.currentUser.photoUrl}
             style={{
               marginTop: '3px',
               borderRadius: '100%',
@@ -20,9 +17,35 @@ export default class CurrentUser extends React.Component {
           />
         </figure>
         <a className="nav-item">
-          소용석님 안녕하세요
+          {this.props.currentUser.name}님 안녕하세요
+        </a>
+        <a
+          className="nav-item"
+          onClick={this.props.logoutHandler}
+        >
+          로그아웃하기
         </a>
       </div>
-    );
+    )
+  }
+
+  renderSignoutMode = () => {
+    return (
+      <div className="nav-right nav-menu">
+        <a
+          className="nav-item"
+          onClick={this.props.loginHandler}
+        >
+          구글로 로그인하기
+        </a>
+      </div>
+    )
+  }
+
+  render() {
+    if (this.props.currentUser.name) {
+      return this.renderLoginMode();
+    }
+    return this.renderSignoutMode();
   }
 }

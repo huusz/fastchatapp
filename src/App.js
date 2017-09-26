@@ -6,6 +6,11 @@ import PostQuestion from './components/PostQuestion';
 import VoteScore from './components/VoteScore';
 import 'bulma/css/bulma.css';
 import 'font-awesome/css/font-awesome.css';
+import {
+  database,
+  auth,
+  googleProvider,
+} from './firebase';
 
 const mockData = {
   questions: [
@@ -43,10 +48,44 @@ const mockData = {
 }
 
 class App extends Component {
-  state = {
-    isPostMode: false,
-    questions: [],
+  constructor(props) {
+    super(props);
+    this.state = {
+      isPostMode: false,
+      questions: [],
+      currentUser: {},
+    }
+
+    this.onAuthChange = auth.onAuthStateChanged((user) => {
+      if (user) {
+        const currentUser = {};
+        currentUser.name = user.displayName;
+        currentUser.photoUrl = user.photoURL;
+        currentUser.email = user.email;
+        this.setState({
+          currentUser: currentUser,
+        })
+      } else {
+        this.setState({
+          currentUser: {
+            name: '',
+            photoUrl: '',
+            email: '',
+          }
+        })
+      }
+    })
   }
+
+  loginWithGoogle = () => {
+    auth.signInWithPopup(googleProvider)
+      .then((user) => {
+        console.log(user)
+      })
+      .catch(error => console.log(error))
+  }
+
+  logout = () => auth.signOut()
 
   componentDidMount = () => {
     this.setState({
@@ -61,6 +100,9 @@ class App extends Component {
       <div>
         <SiteHeader
           togglePostingMode={this.togglePostingMode}
+          currentUser={this.state.currentUser}
+          loginHandler={this.loginWithGoogle}
+          logoutHandler={this.logout}
         />
         {this.state.isPostMode ? (
           <PostQuestion />
