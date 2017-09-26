@@ -59,7 +59,7 @@ class App extends Component {
 
     this.onQuestionChange = database.ref('/questions').on('value', (snapshot) => {
       this.setState({
-        questions: map(snapshot.val(), question => question)
+        questions: map(snapshot.val(), (question, id) => ({ id: id, ...question }))
       })
     })
 
@@ -135,8 +135,10 @@ class App extends Component {
                     email={question.posted_by.email}
                   />
                   <VoteScore
-                    firstOptionVoteList={question.firstOptionVoteList || []}
-                    secondOptionVoteList={question.secondOptionVoteList || []}
+                    currentUser={this.state.currentUser}
+                    questionId={question.id}
+                    firstOptionVoteList={question.firstOptionVoteList || {}}
+                    secondOptionVoteList={question.secondOptionVoteList || {}}
                   />
                 </div>
               </div>
