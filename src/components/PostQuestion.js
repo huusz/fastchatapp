@@ -1,4 +1,8 @@
 import React from 'react'
+import {
+  storage,
+  database,
+} from '../firebase';
 
 
 export default class PostQuestion extends React.Component {
@@ -9,7 +13,15 @@ export default class PostQuestion extends React.Component {
       secondOption: '',
       firstOptionImage: '',
       secondOptionImage: '',
+      uploadProgress: 0,
     }
+
+    this.databaseRef = database.ref("/questions");
+    this.storageRef = storage.ref('vote-images');
+  }
+
+  postQuestionToDB = (payload) => {
+    this.databaseRef.push(payload);
   }
 
   handleFirstOptionValueChange = (e) => {
@@ -22,6 +34,46 @@ export default class PostQuestion extends React.Component {
     this.setState({
       secondOption: e.target.value,
     })
+  }
+
+  handleFirstOptionImageUpload = (e) => {
+    console.log(e.target.files[0]);
+    const file = e.target.files[0];
+
+    const uploadTask = this.storageRef.child(file.name).put(file);
+
+    uploadTask.on('state_changed', (snapshot) => {
+      const uploadProgress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      console.log(uploadProgress);
+      this.setState({ uploadProgress });
+    });
+
+    uploadTask.then((snapshot) => {
+      this.setState({
+        firstOptionImage: snapshot.downloadURL,
+      })
+      this.setState({ uploadProgress: null });
+    });
+  }
+
+  handleSecondOptionImageUpload = (e) => {
+    console.log(e.target.files[0]);
+    const file = e.target.files[0];
+
+    const uploadTask = this.storageRef.child(file.name).put(file);
+
+    uploadTask.on('state_changed', (snapshot) => {
+      const uploadProgress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      console.log(uploadProgress);
+      this.setState({ uploadProgress });
+    });
+
+    uploadTask.then((snapshot) => {
+      this.setState({
+        secondOptionImage: snapshot.downloadURL,
+      })
+      this.setState({ uploadProgress: null });
+    });
   }
 
   closeAndResetValue = () => {
@@ -38,9 +90,12 @@ export default class PostQuestion extends React.Component {
     if (!this.state.secondOption || !this.state.firstOption) {
       return;
     }
-    this.props.postQuestionToDB({
+
+    this.postQuestionToDB({
       firstOption: this.state.firstOption,
       secondOption: this.state.secondOption,
+      firstOptionImage: this.state.firstOptionImage,
+      secondOptionImage: this.state.secondOptionImage,
       posted_by: {
         name: this.props.currentUser.name,
         email: this.props.currentUser.email,
@@ -76,7 +131,12 @@ export default class PostQuestion extends React.Component {
                 <div className="field">
                   <div className="file is-danger">
                     <label className="file-label">
-                      <input className="file-input" type="file" name="resume" />
+                      <input
+                        className="file-input"
+                        type="file"
+                        name="resume"
+                        onChange={this.handleFirstOptionImageUpload}
+                      />
                       <span className="file-cta">
                         <span className="file-icon">
                           <i className="fa fa-upload"></i>
@@ -108,7 +168,10 @@ export default class PostQuestion extends React.Component {
                 <div className="field">
                   <div className="file is-info">
                     <label className="file-label">
-                      <input className="file-input" type="file" name="resume" />
+                      <input
+                        className="file-input" type="file" name="resume"
+                        onChange={this.handleSecondOptionImageUpload}
+                      />
                       <span className="file-cta">
                         <span className="file-icon">
                           <i className="fa fa-upload"></i>

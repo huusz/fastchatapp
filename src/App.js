@@ -97,10 +97,6 @@ class App extends Component {
 
   togglePostingMode = () => this.setState({ isPostMode: !this.state.isPostMode })
 
-  postQuestionToDB = (payload) => {
-    database.ref("/questions").push(payload);
-  }
-
   render() {
     return (
       <div>
@@ -112,7 +108,6 @@ class App extends Component {
         />
         {this.state.isPostMode ? (
           <PostQuestion
-            postQuestionToDB={this.postQuestionToDB}
             onClose={this.togglePostingMode}
             currentUser={this.state.currentUser}
           />
