@@ -9,17 +9,16 @@ export default class UserProfile extends React.Component {
           <div className="media">
             <div className="media-left">
               <figure className="image is-48x48">
-                <img src="http://bulma.io/images/placeholders/96x96.png" alt="Placeholder image" />
+                <img src={this.props.userImage} alt="Placeholder image" />
               </figure>
             </div>
             <div className="media-content">
-              <p className="title is-4">패스트 캠퍼스</p>
-              <p className="subtitle is-6">paulsoh</p>
+              <p className="title is-4">{this.props.name}</p>
             </div>
           </div>
 
           <div className="content">
-            paulsoh.dev@gmail.com
+            {this.props.email}
           </div>
         </div>
       </div>

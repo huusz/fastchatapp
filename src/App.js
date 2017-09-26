@@ -66,24 +66,31 @@ class App extends Component {
           <PostQuestion />
         ) : null}
         <div className="container">
-          <div className="columns">
-            <div className="column">
-              <Card />
-            </div>
-            <div className="column is-one-third">
-              <UserProfile />
-              <VoteScore />
-            </div>
-          </div>
-          <div className="columns">
-            <div className="column">
-              <Card />
-            </div>
-            <div className="column is-one-third">
-              <UserProfile />
-              <VoteScore />
-            </div>
-          </div>
+          {this.state.questions.map((question) => {
+            return (
+              <div className="columns">
+                <div className="column">
+                  <Card
+                    firstOption={question.firstOption}
+                    secondOption={question.secondOption}
+                    firstOptionImage={question.firstOptionImage}
+                    secondOptionImage={question.secondOptionImage}
+                  />
+                </div>
+                <div className="column is-one-third">
+                  <UserProfile
+                    userImage={question.posted_by.photoUrl}
+                    name={question.posted_by.name}
+                    email={question.posted_by.email}
+                  />
+                  <VoteScore
+                    firstOptionVoteList={question.firstOptionVoteList}
+                    secondOptionVoteList={question.secondOptionVoteList}
+                  />
+                </div>
+              </div>
+            )
+          })}
         </div>
       </div>
     );
