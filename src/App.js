@@ -57,12 +57,6 @@ class App extends Component {
       currentUser: {},
     }
 
-    this.onQuestionChange = database.ref('/questions').on('value', (snapshot) => {
-      this.setState({
-        questions: map(snapshot.val(), (question, id) => ({ id: id, ...question }))
-      })
-    })
-
     this.onAuthChange = auth.onAuthStateChanged((user) => {
       if (user) {
         const currentUser = {};
@@ -72,6 +66,13 @@ class App extends Component {
         this.setState({
           currentUser: currentUser,
         })
+
+        this.onQuestionChange = database.ref('/questions').on('value', (snapshot) => {
+          this.setState({
+            questions: map(snapshot.val(), (question, id) => ({ id: id, ...question }))
+          })
+        })
+
       } else {
         this.setState({
           currentUser: {
@@ -119,7 +120,10 @@ class App extends Component {
         <div className="container">
           {this.state.questions.map((question) => {
             return (
-              <div className="columns">
+              <div
+                className="columns"
+                key={question.id}
+              >
                 <div className="column">
                   <Card
                     firstOption={question.firstOption}

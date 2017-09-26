@@ -58,7 +58,7 @@ export default class VoteScore extends React.Component {
           <ul>
             {map(this.props.firstOptionVoteList, (vote) => {
               return (
-                <li>
+                <li key={vote.name}>
                   {vote.name}
                 </li>
               )
@@ -76,7 +76,7 @@ export default class VoteScore extends React.Component {
           <ul>
             {map(this.props.secondOptionVoteList, (vote) => {
               return (
-                <li>
+                <li key={vote.name}>
                   {vote.name}
                 </li>
               )
