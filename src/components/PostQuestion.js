@@ -3,9 +3,12 @@ import {
   storage,
   database,
 } from '../firebase';
+import {
+  connect,
+} from 'react-redux';
 
 
-export default class PostQuestion extends React.Component {
+class PostQuestion extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -99,7 +102,7 @@ export default class PostQuestion extends React.Component {
       posted_by: {
         name: this.props.currentUser.name,
         email: this.props.currentUser.email,
-        photoUrl: this.props.currentUser.photoUrl,
+        photoUrl: this.props.currentUser.profileImageUrl,
       }
     })
     this.closeAndResetValue();
@@ -212,3 +215,11 @@ export default class PostQuestion extends React.Component {
     );
   }
 }
+
+export default connect((state) => ({
+  currentUser: {
+    name: state.auth.name,
+    email: state.auth.email,
+    profileImageUrl: state.auth.profileImageUrl,
+  }
+}), null)(PostQuestion);

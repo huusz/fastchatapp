@@ -2,6 +2,10 @@ import React from 'react'
 import { database } from '../firebase';
 import map from 'lodash/map';
 import filter from 'lodash/filter';
+import {
+  connect,
+} from 'react-redux';
+
 
 const hasUserAlreadyVoted = (name, firstOptionVoteList, secondOptionVoteList) => {
   const hasUserVotedFirstOption = !!firstOptionVoteList.filter((vote) => vote.name === name).length;
@@ -9,7 +13,7 @@ const hasUserAlreadyVoted = (name, firstOptionVoteList, secondOptionVoteList) =>
   return hasUserVotedFirstOption || hasUserVotedSecondOption;
 }
 
-export default class VoteScore extends React.Component {
+class VoteScore extends React.Component {
   postVoteForOptionOne = () => {
     if (hasUserAlreadyVoted(
       this.props.currentUser.name,
@@ -87,3 +91,11 @@ export default class VoteScore extends React.Component {
     );
   }
 }
+
+export default connect((state) => ({
+  currentUser: {
+    name: state.auth.name,
+    email: state.auth.email,
+    profileImageUrl: state.auth.profileImageUrl,
+  }
+}), null)(VoteScore)

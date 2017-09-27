@@ -2,11 +2,6 @@ import React, { Component } from 'react';
 import 'bulma/css/bulma.css';
 import 'font-awesome/css/font-awesome.css';
 import map from 'lodash/map';
-import {
-  Provider,
-  connect,
-} from 'react-redux';
-
 import Card from './components/Card';
 import SiteHeader from './components/SiteHeader';
 import UserProfile from './components/UserProfile';
@@ -14,16 +9,10 @@ import PostQuestion from './components/PostQuestion';
 import VoteScore from './components/VoteScore';
 import {
   database,
-  auth,
-  googleProvider,
 } from './firebase';
-import store from './store';
-import {
-  loginGoogleUser,
-} from './actions/auth';
 
 
-class App extends Component {
+export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,36 +20,12 @@ class App extends Component {
       questions: [],
       currentUser: {},
     }
-
-    this.onAuthChange = auth.onAuthStateChanged((user) => {
-      if (user) {
-        const currentUser = {};
-        currentUser.name = user.displayName;
-        currentUser.photoUrl = user.photoURL;
-        currentUser.email = user.email;
-        this.setState({
-          currentUser: currentUser,
-        })
-
-        this.onQuestionChange = database.ref('/questions').on('value', (snapshot) => {
-          this.setState({
-            questions: map(snapshot.val(), (question, id) => ({ id: id, ...question }))
-          })
-        })
-
-      } else {
-        this.setState({
-          currentUser: {
-            name: '',
-            photoUrl: '',
-            email: '',
-          }
-        })
-      }
+    this.onQuestionChange = database.ref('/questions').on('value', (snapshot) => {
+      this.setState({
+        questions: map(snapshot.val(), (question, id) => ({ id: id, ...question }))
+      })
     })
   }
-
-  logout = () => auth.signOut()
 
   togglePostingMode = () => this.setState({ isPostMode: !this.state.isPostMode })
 
@@ -69,14 +34,10 @@ class App extends Component {
       <div>
         <SiteHeader
           togglePostingMode={this.togglePostingMode}
-          currentUser={this.state.currentUser}
-          loginHandler={this.loginWithGoogle}
-          logoutHandler={this.logout}
         />
         {this.state.isPostMode ? (
           <PostQuestion
             onClose={this.togglePostingMode}
-            currentUser={this.state.currentUser}
           />
         ) : null}
         <div className="container">
@@ -101,7 +62,6 @@ class App extends Component {
                     email={question.posted_by.email}
                   />
                   <VoteScore
-                    currentUser={this.state.currentUser}
                     questionId={question.id}
                     firstOptionVoteList={question.firstOptionVoteList || {}}
                     secondOptionVoteList={question.secondOptionVoteList || {}}
@@ -115,15 +75,3 @@ class App extends Component {
     );
   }
 }
-
-export default connect(
-  (state) => ({
-    currentUser: {
-      name: state.auth.name,
-      email: state.auth.email,
-      profileImageUrl: state.auth.profileImageUrl
-    }
-  }), (dispatch) => ({
-    loginGoogleUser: () => dispatch(loginGoogleUser()),
-  })
-)(App);
