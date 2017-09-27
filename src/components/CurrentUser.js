@@ -1,7 +1,13 @@
 import React from 'react'
+import {
+  connect,
+} from 'react-redux';
+import {
+  loginGoogleUser,
+  logout,
+} from '../actions/auth';
 
-
-export default class CurrentUser extends React.Component {
+class CurrentUser extends React.Component {
   renderLoginMode = () => {
     return (
       <div className="nav-right nav-menu">
@@ -9,7 +15,7 @@ export default class CurrentUser extends React.Component {
           className="image is-48x48"
         >
           <img
-            src={this.props.currentUser.photoUrl}
+            src={this.props.currentUser.profileImageUrl}
             style={{
               marginTop: '3px',
               borderRadius: '100%',
@@ -21,7 +27,7 @@ export default class CurrentUser extends React.Component {
         </a>
         <a
           className="nav-item"
-          onClick={this.props.logoutHandler}
+          onClick={this.props.onLogout}
         >
           로그아웃하기
         </a>
@@ -34,7 +40,7 @@ export default class CurrentUser extends React.Component {
       <div className="nav-right nav-menu">
         <a
           className="nav-item"
-          onClick={this.props.loginHandler}
+          onClick={this.props.loginGoogleUser}
         >
           구글로 로그인하기
         </a>
@@ -49,3 +55,14 @@ export default class CurrentUser extends React.Component {
     return this.renderSignoutMode();
   }
 }
+
+export default connect((state) => ({
+  currentUser: {
+    name: state.auth.name,
+    email: state.auth.email,
+    profileImageUrl: state.auth.profileImageUrl,
+  }
+}), (dispatch) => ({
+  loginGoogleUser: () => dispatch(loginGoogleUser()),
+  onLogout: () => dispatch(logout())
+}))(CurrentUser);

@@ -1,52 +1,27 @@
 import React, { Component } from 'react';
+import 'bulma/css/bulma.css';
+import 'font-awesome/css/font-awesome.css';
+import map from 'lodash/map';
+import {
+  Provider,
+  connect,
+} from 'react-redux';
+
 import Card from './components/Card';
 import SiteHeader from './components/SiteHeader';
 import UserProfile from './components/UserProfile';
 import PostQuestion from './components/PostQuestion';
 import VoteScore from './components/VoteScore';
-import 'bulma/css/bulma.css';
-import 'font-awesome/css/font-awesome.css';
-import map from 'lodash/map';
 import {
   database,
   auth,
   googleProvider,
 } from './firebase';
+import store from './store';
+import {
+  loginGoogleUser,
+} from './actions/auth';
 
-const mockData = {
-  questions: [
-    {
-      firstOption: '자장면',
-      secondOption: '짬뽕',
-      firstOptionImage: 'http://bulma.io/images/placeholders/96x96.png',
-      secondOptionImage: 'http://bulma.io/images/placeholders/96x96.png',
-      posted_by: {
-        name: '소용석',
-        email: 'ysoh611@gmail.com',
-        photoUrl: 'http://bulma.io/images/placeholders/96x96.png',
-      },
-      firstOptionVoteList: [
-        {
-          name: '홍지수',
-        },
-        {
-          name: '홍지수',
-        },
-        {
-          name: '홍',
-        },                
-      ],
-      secondOptionVoteList: [
-        {
-          name: '리액트',
-        },                
-        {
-          name: '마크',
-        },                
-      ]
-    },
-  ]
-}
 
 class App extends Component {
   constructor(props) {
@@ -83,14 +58,6 @@ class App extends Component {
         })
       }
     })
-  }
-
-  loginWithGoogle = () => {
-    auth.signInWithPopup(googleProvider)
-      .then((user) => {
-        console.log(user)
-      })
-      .catch(error => console.log(error))
   }
 
   logout = () => auth.signOut()
@@ -149,4 +116,14 @@ class App extends Component {
   }
 }
 
-export default App;
+export default connect(
+  (state) => ({
+    currentUser: {
+      name: state.auth.name,
+      email: state.auth.email,
+      profileImageUrl: state.auth.profileImageUrl
+    }
+  }), (dispatch) => ({
+    loginGoogleUser: () => dispatch(loginGoogleUser()),
+  })
+)(App);
