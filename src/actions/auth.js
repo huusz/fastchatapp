@@ -1,5 +1,7 @@
+import map from 'lodash/map';
 import {
   auth,
+  database,
   googleProvider,
 } from '../firebase';
 
@@ -9,6 +11,7 @@ export const loginGoogleUser = () => {
     dispatch({
       type: 'LOGIN_USER_REQUEST',
     })
+
     auth.signInWithPopup(googleProvider)
       .then((user) => {
         dispatch({
@@ -19,6 +22,15 @@ export const loginGoogleUser = () => {
             email: user.additionalUserInfo.profile.email,
           }
         })
+        
+        // 로그인이 되면 Question DB에서 값을 받아오는 액션 발생
+        database.ref('/questions').on('value', (snapshot) => {
+          dispatch({
+            type: 'FETCHED_QUESTIONS_LIST',
+            payload: map(snapshot.val(), (question, id) => ({ id, ...question }))
+          })
+        })
+
       })
       .catch((error) => {
         dispatch({

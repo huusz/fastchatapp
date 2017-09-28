@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import 'bulma/css/bulma.css';
 import 'font-awesome/css/font-awesome.css';
 import map from 'lodash/map';
+import {
+  connect,
+} from 'react-redux';
 import Card from './components/Card';
 import SiteHeader from './components/SiteHeader';
 import UserProfile from './components/UserProfile';
@@ -12,19 +15,9 @@ import {
 } from './firebase';
 
 
-export default class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isPostMode: false,
-      questions: [],
-      currentUser: {},
-    }
-    this.onQuestionChange = database.ref('/questions').on('value', (snapshot) => {
-      this.setState({
-        questions: map(snapshot.val(), (question, id) => ({ id: id, ...question }))
-      })
-    })
+class App extends Component {
+  state = {
+    isPostMode: false,
   }
 
   togglePostingMode = () => this.setState({ isPostMode: !this.state.isPostMode })
@@ -41,7 +34,7 @@ export default class App extends Component {
           />
         ) : null}
         <div className="container">
-          {this.state.questions.map((question) => {
+          {this.props.questions.map((question) => {
             return (
               <div
                 className="columns"
@@ -75,3 +68,7 @@ export default class App extends Component {
     );
   }
 }
+
+export default connect((state) => ({
+  questions: state.database.questions
+}), null)(App)
