@@ -6,6 +6,9 @@ import {
 import {
   connect,
 } from 'react-redux';
+import {
+  postQuestionToDB,
+} from '../actions/questions';
 
 
 class PostQuestion extends React.Component {
@@ -19,12 +22,7 @@ class PostQuestion extends React.Component {
       uploadProgress: 0,
     }
 
-    this.databaseRef = database.ref("/questions");
     this.storageRef = storage.ref('vote-images');
-  }
-
-  postQuestionToDB = (payload) => {
-    this.databaseRef.push(payload);
   }
 
   handleFirstOptionValueChange = (e) => {
@@ -94,7 +92,7 @@ class PostQuestion extends React.Component {
       return;
     }
 
-    this.postQuestionToDB({
+    this.props.postQuestionToDB({
       firstOption: this.state.firstOption,
       secondOption: this.state.secondOption,
       firstOptionImage: this.state.firstOptionImage,
@@ -222,4 +220,6 @@ export default connect((state) => ({
     email: state.auth.email,
     profileImageUrl: state.auth.profileImageUrl,
   }
-}), null)(PostQuestion);
+}), (dispatch) => ({
+  postQuestionToDB: (payload) => dispatch(postQuestionToDB(payload))
+}))(PostQuestion);
