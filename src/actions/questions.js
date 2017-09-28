@@ -14,3 +14,5 @@ export const postQuestionToDB = (payload) => {
       type: 'POST_QUESTION_TO_DATABASE',
       payload: payload
     })
+  }
+}
