@@ -28,11 +28,13 @@ class App extends Component {
         <SiteHeader
           togglePostingMode={this.togglePostingMode}
         />
-        {this.state.isPostMode ? (
+        {this.props.isLoggedIn && this.state.isPostMode ? (
           <PostQuestion
             onClose={this.togglePostingMode}
           />
-        ) : null}
+        ) : (
+          this.state.isPostMode ? <div>로그인 하고 사용하세요</div> : null
+        )}
         <div className="container">
           {this.props.questions.map((question) => {
             return (
@@ -70,5 +72,6 @@ class App extends Component {
 }
 
 export default connect((state) => ({
-  questions: state.database.questions
+  questions: state.database.questions,
+  isLoggedIn: !!state.auth.name, // 우리 앱의 구조상 auth.name이 있으면 로그인 된 것으로 간주가능
 }), null)(App)
